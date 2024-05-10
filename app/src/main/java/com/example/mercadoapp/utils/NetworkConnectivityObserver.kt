@@ -3,14 +3,13 @@ package com.example.mercadoapp.utils
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalCoroutinesApi::class)
+//Utility class to listen for changes on network connectivity.
 class NetworkConnectivityObserver(
     private val context: Context
 ): ConnectivityObserver {

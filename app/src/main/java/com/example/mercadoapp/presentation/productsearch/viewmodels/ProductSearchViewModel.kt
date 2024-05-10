@@ -17,6 +17,7 @@ import java.io.IOException
 
 private const val TAG = "ProductSearchViewModel"
 
+//ViewModel that handles the logic behind product search flow.
 class ProductSearchViewModel(private val repositoryImpl: RepositoryImpl) : ViewModel() {
 
     private val _productList: MutableLiveData<ArrayList<Product>> = MutableLiveData()

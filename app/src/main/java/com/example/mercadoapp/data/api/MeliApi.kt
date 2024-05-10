@@ -7,6 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+//Interface that handle network calls to Meli endpoints.
 interface MeliApi {
 
     @GET("/sites/MLB/search")

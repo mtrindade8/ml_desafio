@@ -1,6 +1,7 @@
 package com.example.mercadoapp.domain.models
 
-import android.icu.text.CaseMap.Title
+import java.text.NumberFormat
+import java.util.Locale
 
 data class ProductDetails(
     val id: String = "",
@@ -19,6 +20,11 @@ data class ProductDetails(
                 }
             }
             return attributeString
+        }
+
+        fun getLocaleCurrency(double: Double) : String {
+            val ptBr = Locale("pt", "BR")
+            return NumberFormat.getCurrencyInstance(ptBr).format(double)
         }
     }
 }

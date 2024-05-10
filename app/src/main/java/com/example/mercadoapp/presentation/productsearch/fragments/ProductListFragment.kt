@@ -1,6 +1,7 @@
 package com.example.mercadoapp.presentation.productsearch.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.example.mercadoapp.presentation.productsearch.viewmodels.ProductSearc
 
 private const val TAG = "ProductListFragment"
 
+//Fragment that holds the ProductList Recyclerview and handles the user click on Products.
 class ProductListFragment : Fragment() {
 
     private val viewModel: ProductSearchViewModel by activityViewModels<ProductSearchViewModel>()
@@ -48,6 +50,7 @@ class ProductListFragment : Fragment() {
     }
 
     private fun setObservers() {
+        Log.d(TAG, "Setting observers")
         viewModel.productList.observe(viewLifecycleOwner, Observer {
             handleEmptyList(it)
         })
@@ -55,6 +58,7 @@ class ProductListFragment : Fragment() {
 
     private fun handleEmptyList(productList: ArrayList<Product>) {
         if (productList.isNotEmpty()) {
+            Log.d(TAG, "Updating recyclerview")
             productListAdapter.updateData(productList)
         }
     }

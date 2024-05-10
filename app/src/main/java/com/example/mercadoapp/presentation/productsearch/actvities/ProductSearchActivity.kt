@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.mercadoapp.R
 import com.example.mercadoapp.databinding.ActivityProductSearchBinding
 import com.example.mercadoapp.presentation.productsearch.fragments.ProductDetailFragment
 import com.example.mercadoapp.presentation.productsearch.fragments.ProductListFragment
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.onEach
 
 private const val TAG = "ProductSearchActivity"
 
+//Activity that holds the SearchView and handle the fragment's navigation.
 class ProductSearchActivity : AppCompatActivity() {
 
     lateinit var viewModel: ProductSearchViewModel
@@ -44,7 +46,7 @@ class ProductSearchActivity : AppCompatActivity() {
     private fun setObservers() {
 
         viewModel.onEmptyResponse.observe(this, Observer {
-            Toast.makeText(this, "Produto não encontrado", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.product_not_found_alert), Toast.LENGTH_SHORT).show()
         })
 
         viewModel.selectedProductId.observe(this, Observer {
@@ -53,7 +55,7 @@ class ProductSearchActivity : AppCompatActivity() {
                 viewModel.cleanProductDetails()
                 replaceFragment(ProductDetailFragment())
             } else {
-                Toast.makeText(this, "Erro ao buscar detalhes do produto", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.product_details_not_found_alert), Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -64,21 +66,22 @@ class ProductSearchActivity : AppCompatActivity() {
         binding.searchView.apply {
             setOnClickListener { isIconified = false }
             setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if(!query.isNullOrEmpty()) {
-                    viewModel.getProducts(query)
-                    viewModel.cleanProductList()
-                    replaceFragment(ProductListFragment())
-                    dismissKeyboard(binding.root)
-                    return true
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    if(!query.isNullOrEmpty()) {
+                        Log.d(TAG, "Searching for: $query")
+                        viewModel.cleanProductList()
+                        viewModel.getProducts(query)
+                        replaceFragment(ProductListFragment())
+                        dismissKeyboard(binding.root)
+                        return true
+                    }
+                    return false
                 }
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-        }) }
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    return false
+                }
+            })
+        }
     }
 
     private fun setConnectivityObserver() {
@@ -89,7 +92,7 @@ class ProductSearchActivity : AppCompatActivity() {
             when(it){
                 ConnectivityObserver.Status.Available -> networkSnackbar.apply { if (isShown) dismiss() }
                 ConnectivityObserver.Status.Unavailable -> networkSnackbar.show()
-                ConnectivityObserver.Status.Losing -> Log.d(TAG, "Perdendo conexão com a internet")
+                ConnectivityObserver.Status.Losing -> Log.d(TAG, "Losing internet connection")
                 ConnectivityObserver.Status.Lost -> networkSnackbar.show()
             }
         }.launchIn(lifecycleScope)
@@ -98,7 +101,7 @@ class ProductSearchActivity : AppCompatActivity() {
     private fun setConnectivitySnackBar() {
         networkSnackbar = Snackbar
             .make(
-                findViewById(android.R.id.content), "Verifique sua conexão com a internet.",
+                findViewById(android.R.id.content), getString(R.string.internet_connection_alert),
                 Snackbar.LENGTH_INDEFINITE
             )
     }
